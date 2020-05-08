@@ -8,7 +8,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.sanitas.calculator.dto.OperationResult;
+import com.sanitas.calculator.model.OperationInfo;
+import com.sanitas.calculator.model.OperationInfo.OperationInfoBuilder;
+import com.sanitas.calculator.model.OperationType;
 import com.sanitas.calculator.service.CalculatorAPI;
+
+import io.corp.calculator.TracerImpl;
 
 /**
  * Rest service for calculator
@@ -24,6 +29,10 @@ public class CalculatorController {
 
 	@Autowired
 	private CalculatorAPI calculatorAPI;
+	
+	//TODO We should use TracerAPI instead TracerImpl, but TracerImpl does not implement TracerAPI. Is it a bug in tracer-1.0.0 library?
+	@Autowired
+	private TracerImpl tracerAPI;	
 	
 	/**
 	 * Return the API version
@@ -52,6 +61,13 @@ public class CalculatorController {
 
 		OperationResult operationResult = new OperationResult(result);
 
+		OperationInfo operationInfo = new OperationInfoBuilder(OperationType.SUM)
+				.withValues(param1, param2)
+				.withResult(operationResult)
+				.build();
+
+		tracerAPI.trace(operationInfo);		
+		
 		return ResponseEntity.ok(operationResult);
 	}	
 	
@@ -71,6 +87,13 @@ public class CalculatorController {
 
 		OperationResult operationResult = new OperationResult(result);
 
+		OperationInfo operationInfo = new OperationInfoBuilder(OperationType.SUBTRACT)
+				.withValues(param1, param2)
+				.withResult(operationResult)
+				.build();
+
+		tracerAPI.trace(operationInfo);			
+		
 		return ResponseEntity.ok(operationResult);
 	}  	
 }

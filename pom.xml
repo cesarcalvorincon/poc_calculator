@@ -35,6 +35,15 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
+		
+		<!-- Local library. Add to local Maven repository with the command: 
+		mvnw org.apache.maven.plugins:maven-install-plugin:3.0.0-M1:install-file -Dfile=./lib/
+		 -->
+		<dependency>
+ 			<groupId>io.corp.calculator</groupId>
+  			<artifactId>tracer</artifactId>
+			<version>1.0.0</version>
+		</dependency>		
 	</dependencies>
 
 	<build>
